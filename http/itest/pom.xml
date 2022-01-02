@@ -45,8 +45,8 @@
                 <artifactId>maven-surefire-plugin</artifactId>
                 <configuration>
                     <systemPropertyVariables>                    
- 		                <http.servlet.api.version>${http.servlet.api.version}</http.servlet.api.version>
-                		<http.jetty.version>${http.jetty.version}</http.jetty.version>
+                        <http.servlet.api.version>${http.servlet.api.version}</http.servlet.api.version>
+                        <http.jetty.version>${http.jetty.version}</http.jetty.version>
                     </systemPropertyVariables>
                 </configuration>
             </plugin>  

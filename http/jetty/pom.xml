@@ -159,9 +159,7 @@
                             org.osgi.service.http.runtime.dto,
                             org.osgi.service.http.whiteboard,
                             !org.eclipse.jetty,
-                            !org.eclipse.jetty.util.log.jmx,
                             !org.eclipse.jetty.version,
-                            !org.eclipse.jetty.websocket.core.server.internal,
                             org.eclipse.jetty.*,
                             org.apache.felix.http.jetty
                         </Export-Package>
@@ -169,9 +167,7 @@
                             org.apache.felix.http.base.*,
                             org.apache.felix.http.jetty.*,
                             org.eclipse.jetty,
-                            org.eclipse.jetty.security.authentication,
-                            org.eclipse.jetty.version,
-                            org.eclipse.jetty.websocket.core.server.internal
+                            org.eclipse.jetty.version
                         </Private-Package>
                         <Conditional-Package>
                             org.apache.commons.*
@@ -360,18 +356,6 @@
             <artifactId>jetty-webapp</artifactId>
             <version>${jetty.version}</version>
         </dependency>
-        <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-servlet</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-<!-- 
-       <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
--->
         <dependency>
             <groupId>org.eclipse.jetty.http2</groupId>
             <artifactId>http2-server</artifactId>
