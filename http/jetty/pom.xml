@@ -160,7 +160,6 @@
                             org.osgi.service.http.whiteboard,
                             !org.eclipse.jetty,
                             !org.eclipse.jetty.version,
-                            !org.eclipse.jetty.websocket.core.server.internal,
                             org.eclipse.jetty.*,
                             org.apache.felix.http.jetty
                         </Export-Package>
@@ -358,21 +357,6 @@
             <version>${jetty.version}</version>
         </dependency>
         <dependency>
-<<<<<<< HEAD
-=======
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-servlet</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
-<!-- 
-       <dependency>
-            <groupId>org.eclipse.jetty.websocket</groupId>
-            <artifactId>websocket-server</artifactId>
-            <version>${jetty.version}</version>
-        </dependency>
--->
-        <dependency>
->>>>>>> 8dc97db602 (Update jetty to Jetty 11, jakarta servlet api)
             <groupId>org.eclipse.jetty.http2</groupId>
             <artifactId>http2-server</artifactId>
             <version>${jetty.version}</version>
