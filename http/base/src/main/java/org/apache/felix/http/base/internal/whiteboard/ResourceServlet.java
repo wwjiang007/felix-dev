@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.felix.http.base.internal.service;
+package org.apache.felix.http.base.internal.whiteboard;
 
 import java.io.File;
 import java.io.IOException;
@@ -23,93 +23,79 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.URLConnection;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * The resource servlet
  */
-public final class ResourceServlet extends HttpServlet
-{
+public class ResourceServlet extends HttpServlet {
+
     private static final long serialVersionUID = 1L;
 
     /** The path of the resource registration. */
     private final String prefix;
 
-    public ResourceServlet(final String prefix)
-    {
+    /**
+     * The prefix for the resource
+     * @param prefix The prefix
+     */
+    public ResourceServlet(final String prefix) {
         this.prefix = prefix;
     }
 
     @Override
     protected void doGet(final HttpServletRequest req, final HttpServletResponse res)
-            throws ServletException, IOException
-    {
+            throws ServletException, IOException {
         final String target = req.getPathInfo();
         final String resName = (target == null ? this.prefix : this.prefix + target);
 
         final URL url = getServletContext().getResource(resName);
 
-        if (url == null)
-        {
+        if (url == null) {
             res.sendError(HttpServletResponse.SC_NOT_FOUND);
-        }
-        else
-        {
+        } else {
             handle(req, res, url, resName);
         }
     }
 
     private void handle(final HttpServletRequest req,
             final HttpServletResponse res, final URL url, final String resName)
-    throws IOException
-    {
+    throws IOException {
         final String contentType = getServletContext().getMimeType(resName);
-        if (contentType != null)
-        {
+        if (contentType != null) {
             res.setContentType(contentType);
         }
 
         final long lastModified = getLastModified(url);
-        if (lastModified != 0)
-        {
+        if (lastModified != 0) {
             res.setDateHeader("Last-Modified", lastModified);
         }
 
-        if (!resourceModified(lastModified, req.getDateHeader("If-Modified-Since")))
-        {
+        if (!resourceModified(lastModified, req.getDateHeader("If-Modified-Since"))) {
             res.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
-        }
-        else
-        {
+        } else {
             copyResource(url, res);
         }
     }
 
-    private long getLastModified(final URL url)
-    {
+    private long getLastModified(final URL url) {
         long lastModified = 0;
 
-        try
-        {
+        try {
             final URLConnection conn = url.openConnection();
             lastModified = conn.getLastModified();
-        }
-        catch (final Exception e)
-        {
+        } catch (final Exception e) {
             // Do nothing
         }
 
-        if (lastModified == 0)
-        {
+        if (lastModified == 0) {
             final String filepath = url.getPath();
-            if (filepath != null)
-            {
+            if (filepath != null) {
                 final File f = new File(filepath);
-                if (f.exists())
-                {
+                if (f.exists()) {
                     lastModified = f.lastModified();
                 }
             }
@@ -118,22 +104,19 @@ public final class ResourceServlet extends HttpServlet
         return lastModified;
     }
 
-    private boolean resourceModified(long resTimestamp, long modSince)
-    {
+    private boolean resourceModified(long resTimestamp, long modSince) {
         modSince /= 1000;
         resTimestamp /= 1000;
 
         return resTimestamp == 0 || modSince == -1 || resTimestamp > modSince;
     }
 
-    private void copyResource(final URL url, final HttpServletResponse res) throws IOException
-    {
+    private void copyResource(final URL url, final HttpServletResponse res) throws IOException {
         URLConnection conn = null;
         OutputStream os = null;
         InputStream is = null;
 
-        try
-        {
+        try {
             conn = url.openConnection();
 
             is = conn.getInputStream();
@@ -141,28 +124,22 @@ public final class ResourceServlet extends HttpServlet
             // FELIX-3987 content length should be set *before* any streaming is done
             // as headers should be written before the content is actually written...
             int len = getContentLength(conn);
-            if (len >= 0)
-            {
+            if (len >= 0) {
                 res.setContentLength(len);
             }
 
             byte[] buf = new byte[1024];
             int n;
 
-            while ((n = is.read(buf, 0, buf.length)) >= 0)
-            {
+            while ((n = is.read(buf, 0, buf.length)) >= 0) {
                 os.write(buf, 0, n);
             }
-        }
-        finally
-        {
-            if (is != null)
-            {
+        } finally {
+            if (is != null) {
                 is.close();
             }
 
-            if (os != null)
-            {
+            if (os != null) {
                 os.close();
             }
         }

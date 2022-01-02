@@ -16,7 +16,7 @@
  */
 package org.apache.felix.http.base.internal.runtime.dto;
 
-import javax.servlet.DispatcherType;
+import jakarta.servlet.DispatcherType;
 
 import org.apache.felix.http.base.internal.handler.FilterHandler;
 import org.apache.felix.http.base.internal.registry.HandlerRegistry;

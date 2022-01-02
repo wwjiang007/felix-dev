@@ -25,7 +25,7 @@ import static org.mockito.Mockito.when;
 
 import java.util.EventListener;
 
-import javax.servlet.ServletContextListener;
+import jakarta.servlet.ServletContextListener;
 
 import org.junit.Test;
 import org.mockito.ArgumentMatchers;
