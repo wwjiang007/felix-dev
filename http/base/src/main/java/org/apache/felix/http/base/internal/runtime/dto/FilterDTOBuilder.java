@@ -19,7 +19,7 @@
 package org.apache.felix.http.base.internal.runtime.dto;
 
 import org.jetbrains.annotations.NotNull;
-import javax.servlet.DispatcherType;
+import jakarta.servlet.DispatcherType;
 
 import org.apache.felix.http.base.internal.handler.FilterHandler;
 import org.apache.felix.http.base.internal.runtime.FilterInfo;

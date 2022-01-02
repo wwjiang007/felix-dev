@@ -24,7 +24,7 @@ import java.util.List;
 
 import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.NotNull;
-import javax.servlet.DispatcherType;
+import jakarta.servlet.DispatcherType;
 
 import org.apache.felix.http.base.internal.handler.FilterHandler;
 import org.apache.felix.http.base.internal.handler.ServletHandler;

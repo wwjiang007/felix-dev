@@ -24,7 +24,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.servlet.ServletContext;
+import jakarta.servlet.ServletContext;
 
 import org.apache.felix.http.base.internal.runtime.ServletContextHelperInfo;
 import org.osgi.dto.DTO;

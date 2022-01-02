@@ -33,18 +33,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletContextEvent;
-import javax.servlet.ServletContextListener;
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
-import javax.servlet.http.HttpSessionEvent;
-
 import org.apache.felix.http.base.internal.console.HttpServicePlugin;
 import org.apache.felix.http.base.internal.context.ExtServletContext;
 import org.apache.felix.http.base.internal.handler.FilterHandler;
@@ -71,13 +59,15 @@ import org.apache.felix.http.base.internal.runtime.dto.RegistryRuntime;
 import org.apache.felix.http.base.internal.runtime.dto.ServletContextDTOBuilder;
 import org.apache.felix.http.base.internal.service.HttpServiceFactory;
 import org.apache.felix.http.base.internal.service.HttpServiceRuntimeImpl;
-import org.apache.felix.http.base.internal.service.ResourceServlet;
-import org.apache.felix.http.base.internal.whiteboard.tracker.FilterTracker;
-import org.apache.felix.http.base.internal.whiteboard.tracker.ListenersTracker;
-import org.apache.felix.http.base.internal.whiteboard.tracker.PreprocessorTracker;
+import org.apache.felix.http.base.internal.whiteboard.tracker.JavaxFilterTracker;
+import org.apache.felix.http.base.internal.whiteboard.tracker.JavaxListenersTracker;
+import org.apache.felix.http.base.internal.whiteboard.tracker.JavaxPreprocessorTracker;
+import org.apache.felix.http.base.internal.whiteboard.tracker.JavaxServletContextHelperTracker;
+import org.apache.felix.http.base.internal.whiteboard.tracker.JavaxServletTracker;
 import org.apache.felix.http.base.internal.whiteboard.tracker.ResourceTracker;
 import org.apache.felix.http.base.internal.whiteboard.tracker.ServletContextHelperTracker;
-import org.apache.felix.http.base.internal.whiteboard.tracker.ServletTracker;
+import org.apache.felix.http.base.osgi.whiteboard.Preprocessor;
+import org.apache.felix.http.base.osgi.whiteboard.ServletContextHelper;
 import org.jetbrains.annotations.NotNull;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -87,14 +77,24 @@ import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.ServiceFactory;
 import org.osgi.framework.ServiceReference;
 import org.osgi.framework.ServiceRegistration;
-import org.osgi.service.http.context.ServletContextHelper;
 import org.osgi.service.http.runtime.HttpServiceRuntimeConstants;
 import org.osgi.service.http.runtime.dto.DTOConstants;
 import org.osgi.service.http.runtime.dto.PreprocessorDTO;
 import org.osgi.service.http.runtime.dto.ServletContextDTO;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
-import org.osgi.service.http.whiteboard.Preprocessor;
 import org.osgi.util.tracker.ServiceTracker;
+
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletContext;
+import jakarta.servlet.ServletContextEvent;
+import jakarta.servlet.ServletContextListener;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.HttpSession;
+import jakarta.servlet.http.HttpSessionEvent;
 
 public final class WhiteboardManager
 {
@@ -199,12 +199,17 @@ public final class WhiteboardManager
                         // nothing to do
                     }
                 }, props);
-        addTracker(new FilterTracker(this.httpBundleContext, this));
-        addTracker(new ListenersTracker(this.httpBundleContext, this));
-        addTracker(new PreprocessorTracker(this.httpBundleContext, this));
+//        addTracker(new FilterTracker(this.httpBundleContext, this));
+//        addTracker(new ListenersTracker(this.httpBundleContext, this));
+//        addTracker(new PreprocessorTracker(this.httpBundleContext, this));
         addTracker(new ResourceTracker(this.httpBundleContext, this));
         addTracker(new ServletContextHelperTracker(this.httpBundleContext, this));
-        addTracker(new ServletTracker(this.httpBundleContext, this));
+//        addTracker(new ServletTracker(this.httpBundleContext, this));
+        addTracker(new JavaxServletContextHelperTracker(httpBundleContext, this));
+        addTracker(new JavaxFilterTracker(httpBundleContext, this));
+        addTracker(new JavaxServletTracker(httpBundleContext, this));
+        addTracker(new JavaxListenersTracker(httpBundleContext, this));
+        addTracker(new JavaxPreprocessorTracker(httpBundleContext, this));
 
         this.plugin.register();
     }
@@ -525,8 +530,8 @@ public final class WhiteboardManager
                 final String filterString = "(" + Constants.SERVICE_ID + "=" + String.valueOf(h.getContextInfo().getServiceId()) + ")";
                 try
                 {
-                    final Collection<ServiceReference<ServletContextHelper>> col = info.getServiceReference().getBundle().getBundleContext().getServiceReferences(ServletContextHelper.class, filterString);
-                    if ( !col.isEmpty() )
+                    final ServiceReference<?>[] col = info.getServiceReference().getBundle().getBundleContext().getServiceReferences(h.getContextInfo().getServiceType(), filterString);
+                    if ( col !=null && col.length > 0 )
                     {
                         visible = true;
                     }

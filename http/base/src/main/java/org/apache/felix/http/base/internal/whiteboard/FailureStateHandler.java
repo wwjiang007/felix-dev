@@ -68,7 +68,7 @@ public class FailureStateHandler {
 
     public void addFailure(final AbstractInfo<?> info, final long contextId, final int reason, final Exception ex)
     {
-        final String type = info.getClass().getSimpleName().substring(0, info.getClass().getSimpleName().length() - 4);
+        final String type = info.getType();
         final String serviceInfo;
         final ServiceReference<?> ref = info.getServiceReference();
         if ( ref == null ) {

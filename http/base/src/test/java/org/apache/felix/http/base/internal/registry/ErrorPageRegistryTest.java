@@ -30,10 +30,6 @@ import java.io.IOException;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.servlet.Servlet;
-import javax.servlet.ServletConfig;
-import javax.servlet.ServletException;
-
 import org.apache.felix.http.base.internal.context.ExtServletContext;
 import org.apache.felix.http.base.internal.handler.HttpServiceServletHandler;
 import org.apache.felix.http.base.internal.handler.ServletHandler;
@@ -49,6 +45,10 @@ import org.osgi.framework.ServiceReference;
 import org.osgi.service.http.runtime.dto.DTOConstants;
 import org.osgi.service.http.runtime.dto.ServletContextDTO;
 import org.osgi.service.http.whiteboard.HttpWhiteboardConstants;
+
+import jakarta.servlet.Servlet;
+import jakarta.servlet.ServletConfig;
+import jakarta.servlet.ServletException;
 
 public class ErrorPageRegistryTest
 {
@@ -292,6 +292,6 @@ public class ErrorPageRegistryTest
         final ExtServletContext ctx = mock(ExtServletContext.class);
         final Servlet servlet = mock(Servlet.class);
 
-        return new HttpServiceServletHandler(ctx, si, servlet);
+        return new HttpServiceServletHandler(-1, ctx, si, servlet);
     }
 }

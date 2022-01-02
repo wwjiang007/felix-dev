@@ -21,7 +21,7 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
-import javax.servlet.DispatcherType;
+import jakarta.servlet.DispatcherType;
 
 import org.apache.felix.http.base.internal.HttpConfig;
 import org.apache.felix.http.base.internal.handler.FilterHandler;
