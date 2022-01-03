@@ -16,6 +16,12 @@
  */
 package org.apache.felix.http.base.internal.javaxwrappers;
 
+import static jakarta.servlet.AsyncContext.ASYNC_CONTEXT_PATH;
+import static jakarta.servlet.AsyncContext.ASYNC_MAPPING;
+import static jakarta.servlet.AsyncContext.ASYNC_PATH_INFO;
+import static jakarta.servlet.AsyncContext.ASYNC_QUERY_STRING;
+import static jakarta.servlet.AsyncContext.ASYNC_REQUEST_URI;
+import static jakarta.servlet.AsyncContext.ASYNC_SERVLET_PATH;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION_TYPE;
 import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
@@ -23,11 +29,13 @@ import static jakarta.servlet.RequestDispatcher.ERROR_REQUEST_URI;
 import static jakarta.servlet.RequestDispatcher.ERROR_SERVLET_NAME;
 import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 import static jakarta.servlet.RequestDispatcher.FORWARD_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.FORWARD_MAPPING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.FORWARD_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_REQUEST_URI;
 import static jakarta.servlet.RequestDispatcher.FORWARD_SERVLET_PATH;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.INCLUDE_MAPPING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_REQUEST_URI;
@@ -45,6 +53,7 @@ import org.jetbrains.annotations.NotNull;
 
 import jakarta.servlet.RequestDispatcher;
 import jakarta.servlet.ServletRequest;
+import jakarta.servlet.http.HttpServletMapping;
 import jakarta.servlet.http.HttpServletRequest;
 
 /**
@@ -85,10 +94,23 @@ public class ServletRequestWrapper implements javax.servlet.ServletRequest {
         return this.request;
     }
 
+    private Object wrapHttpServletMapping(final Object value) {
+        if ( value instanceof org.apache.felix.http.base.internal.jakartawrappers.HttpServletMappingWrapper ) {
+            return ((org.apache.felix.http.base.internal.jakartawrappers.HttpServletMappingWrapper)value).getMapping();
+        }
+        if ( value instanceof HttpServletMapping ) {
+            return new HttpServletMappingWrapper((HttpServletMapping)value);
+        }
+        return value;
+    }
+
     @Override
     public Object getAttribute(final String name) {
         if ( javax.servlet.RequestDispatcher.FORWARD_CONTEXT_PATH.equals(name) ) {
             return this.request.getAttribute(FORWARD_CONTEXT_PATH);
+
+        } else if ( javax.servlet.RequestDispatcher.FORWARD_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(FORWARD_MAPPING));
 
         } else if ( javax.servlet.RequestDispatcher.FORWARD_PATH_INFO.equals(name) ) {
             return this.request.getAttribute(FORWARD_PATH_INFO);
@@ -104,6 +126,9 @@ public class ServletRequestWrapper implements javax.servlet.ServletRequest {
 
         } else if ( javax.servlet.RequestDispatcher.INCLUDE_CONTEXT_PATH.equals(name) ) {
             return this.request.getAttribute(INCLUDE_CONTEXT_PATH);
+
+        } else if ( javax.servlet.RequestDispatcher.INCLUDE_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(INCLUDE_MAPPING));
 
         } else if ( javax.servlet.RequestDispatcher.INCLUDE_PATH_INFO.equals(name) ) {
             return this.request.getAttribute(INCLUDE_PATH_INFO);
@@ -134,6 +159,24 @@ public class ServletRequestWrapper implements javax.servlet.ServletRequest {
 
         } else if ( javax.servlet.RequestDispatcher.ERROR_STATUS_CODE.equals(name) ) {
             return this.request.getAttribute(ERROR_STATUS_CODE);
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_CONTEXT_PATH.equals(name) ) {
+            return this.request.getAttribute(ASYNC_CONTEXT_PATH);
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(ASYNC_MAPPING));
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_PATH_INFO.equals(name) ) {
+            return this.request.getAttribute(ASYNC_PATH_INFO);
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_QUERY_STRING.equals(name) ) {
+            return this.request.getAttribute(ASYNC_QUERY_STRING);
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_REQUEST_URI.equals(name) ) {
+            return this.request.getAttribute(ASYNC_REQUEST_URI);
+
+        } else if ( javax.servlet.AsyncContext.ASYNC_SERVLET_PATH.equals(name) ) {
+            return this.request.getAttribute(ASYNC_SERVLET_PATH);
         }
         return this.request.getAttribute(name);
     }
