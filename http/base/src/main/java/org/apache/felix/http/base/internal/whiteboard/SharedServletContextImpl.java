@@ -51,6 +51,7 @@ import jakarta.servlet.ServletRegistration.Dynamic;
 import jakarta.servlet.SessionCookieConfig;
 import jakarta.servlet.SessionTrackingMode;
 import jakarta.servlet.descriptor.JspConfigDescriptor;
+import jakarta.servlet.http.MappingMatch;
 
 /**
  * This servlet context implementation represents the shared
