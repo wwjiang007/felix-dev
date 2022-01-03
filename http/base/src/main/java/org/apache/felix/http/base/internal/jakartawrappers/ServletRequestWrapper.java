@@ -16,6 +16,12 @@
  */
 package org.apache.felix.http.base.internal.jakartawrappers;
 
+import static jakarta.servlet.AsyncContext.ASYNC_CONTEXT_PATH;
+import static jakarta.servlet.AsyncContext.ASYNC_MAPPING;
+import static jakarta.servlet.AsyncContext.ASYNC_PATH_INFO;
+import static jakarta.servlet.AsyncContext.ASYNC_QUERY_STRING;
+import static jakarta.servlet.AsyncContext.ASYNC_REQUEST_URI;
+import static jakarta.servlet.AsyncContext.ASYNC_SERVLET_PATH;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION;
 import static jakarta.servlet.RequestDispatcher.ERROR_EXCEPTION_TYPE;
 import static jakarta.servlet.RequestDispatcher.ERROR_MESSAGE;
@@ -23,11 +29,13 @@ import static jakarta.servlet.RequestDispatcher.ERROR_REQUEST_URI;
 import static jakarta.servlet.RequestDispatcher.ERROR_SERVLET_NAME;
 import static jakarta.servlet.RequestDispatcher.ERROR_STATUS_CODE;
 import static jakarta.servlet.RequestDispatcher.FORWARD_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.FORWARD_MAPPING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.FORWARD_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_REQUEST_URI;
 import static jakarta.servlet.RequestDispatcher.FORWARD_SERVLET_PATH;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.INCLUDE_MAPPING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_REQUEST_URI;
@@ -89,10 +97,23 @@ public class ServletRequestWrapper implements ServletRequest {
         return this.request;
     }
 
+    private Object wrapHttpServletMapping(final Object value) {
+        if ( value instanceof org.apache.felix.http.base.internal.javaxwrappers.HttpServletMappingWrapper ) {
+            return ((org.apache.felix.http.base.internal.javaxwrappers.HttpServletMappingWrapper)value).getMapping();
+        }
+        if ( value instanceof javax.servlet.http.HttpServletMapping ) {
+            return new HttpServletMappingWrapper((javax.servlet.http.HttpServletMapping)value);
+        }
+        return value;
+    }
+
     @Override
     public Object getAttribute(final String name) {
         if ( FORWARD_CONTEXT_PATH.equals(name) ) {
             return this.request.getAttribute(javax.servlet.RequestDispatcher.FORWARD_CONTEXT_PATH);
+
+        } else if ( FORWARD_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(javax.servlet.RequestDispatcher.FORWARD_MAPPING));
 
         } else if ( FORWARD_PATH_INFO.equals(name) ) {
             return this.request.getAttribute(javax.servlet.RequestDispatcher.FORWARD_PATH_INFO);
@@ -108,6 +129,9 @@ public class ServletRequestWrapper implements ServletRequest {
 
         } else if ( INCLUDE_CONTEXT_PATH.equals(name) ) {
             return this.request.getAttribute(javax.servlet.RequestDispatcher.INCLUDE_CONTEXT_PATH);
+
+        } else if ( INCLUDE_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(javax.servlet.RequestDispatcher.INCLUDE_MAPPING));
 
         } else if ( INCLUDE_PATH_INFO.equals(name) ) {
             return this.request.getAttribute(javax.servlet.RequestDispatcher.INCLUDE_PATH_INFO);
@@ -138,6 +162,24 @@ public class ServletRequestWrapper implements ServletRequest {
 
         } else if ( ERROR_STATUS_CODE.equals(name) ) {
             return this.request.getAttribute(javax.servlet.RequestDispatcher.ERROR_STATUS_CODE);
+
+        } else if ( ASYNC_CONTEXT_PATH.equals(name) ) {
+            return this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_CONTEXT_PATH);
+
+        } else if ( ASYNC_MAPPING.equals(name) ) {
+            return wrapHttpServletMapping(this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_MAPPING));
+
+        } else if ( ASYNC_PATH_INFO.equals(name) ) {
+            return this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_PATH_INFO);
+
+        } else if ( ASYNC_QUERY_STRING.equals(name) ) {
+            return this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_QUERY_STRING);
+
+        } else if ( ASYNC_REQUEST_URI.equals(name) ) {
+            return this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_REQUEST_URI);
+
+        } else if ( ASYNC_SERVLET_PATH.equals(name) ) {
+            return this.request.getAttribute(javax.servlet.AsyncContext.ASYNC_SERVLET_PATH);
         }
         return this.request.getAttribute(name);
     }
