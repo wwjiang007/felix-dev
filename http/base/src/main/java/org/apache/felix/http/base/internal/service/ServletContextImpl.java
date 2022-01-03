@@ -64,6 +64,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSessionAttributeListener;
 import jakarta.servlet.http.HttpSessionListener;
+import jakarta.servlet.http.MappingMatch;
 
 @SuppressWarnings("deprecation")
 public class ServletContextImpl implements ExtServletContext
