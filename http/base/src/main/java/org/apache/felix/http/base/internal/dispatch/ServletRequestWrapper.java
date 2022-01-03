@@ -17,11 +17,13 @@
 package org.apache.felix.http.base.internal.dispatch;
 
 import static jakarta.servlet.RequestDispatcher.FORWARD_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.FORWARD_MAPPING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.FORWARD_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.FORWARD_REQUEST_URI;
 import static jakarta.servlet.RequestDispatcher.FORWARD_SERVLET_PATH;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_CONTEXT_PATH;
+import static jakarta.servlet.RequestDispatcher.INCLUDE_MAPPING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_PATH_INFO;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_QUERY_STRING;
 import static jakarta.servlet.RequestDispatcher.INCLUDE_REQUEST_URI;
@@ -60,6 +62,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.ServletRequest;
 import jakarta.servlet.ServletRequestAttributeEvent;
 import jakarta.servlet.ServletResponse;
+import jakarta.servlet.http.HttpServletMapping;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletRequestWrapper;
 import jakarta.servlet.http.HttpSession;
@@ -71,7 +74,7 @@ final class ServletRequestWrapper extends HttpServletRequestWrapper
             FORWARD_MAPPING, FORWARD_PATH_INFO, FORWARD_QUERY_STRING, FORWARD_REQUEST_URI, FORWARD_SERVLET_PATH,
             INCLUDE_CONTEXT_PATH, INCLUDE_MAPPING, INCLUDE_PATH_INFO, INCLUDE_QUERY_STRING, INCLUDE_REQUEST_URI,
             INCLUDE_SERVLET_PATH);
-    
+
     /**
      * Constant for HTTP POST method.
      */

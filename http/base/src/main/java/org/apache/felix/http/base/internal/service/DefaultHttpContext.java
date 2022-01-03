@@ -18,9 +18,6 @@ package org.apache.felix.http.base.internal.service;
 
 import java.net.URL;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 import org.osgi.framework.Bundle;
 import org.osgi.service.http.HttpContext;
 
@@ -51,7 +48,7 @@ public final class DefaultHttpContext
     }
 
     @Override
-    public boolean handleSecurity(HttpServletRequest req, HttpServletResponse res)
+    public boolean handleSecurity(final javax.servlet.http.HttpServletRequest req, final javax.servlet.http.HttpServletResponse res)
     {
         return true;
     }
