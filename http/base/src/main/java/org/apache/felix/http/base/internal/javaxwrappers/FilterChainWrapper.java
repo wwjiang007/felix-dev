@@ -18,10 +18,6 @@ package org.apache.felix.http.base.internal.javaxwrappers;
 
 import java.io.IOException;
 
-import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
-
 import org.apache.felix.http.base.internal.jakartawrappers.ServletResponseWrapper;
 import org.jetbrains.annotations.NotNull;
 
@@ -43,7 +39,8 @@ public class FilterChainWrapper implements javax.servlet.FilterChain {
     }
 
     @Override
-    public void doFilter(final ServletRequest request, final ServletResponse response) throws IOException, ServletException {
+    public void doFilter(final javax.servlet.ServletRequest request, final javax.servlet.ServletResponse response)
+            throws IOException, javax.servlet.ServletException {
         try {
             filterChain.doFilter(org.apache.felix.http.base.internal.jakartawrappers.ServletRequestWrapper.getWrapper(request),
                     ServletResponseWrapper.getWrapper(response));
