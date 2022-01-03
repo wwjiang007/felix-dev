@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Enumeration;
 import java.util.List;
+import java.util.Map;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -29,6 +30,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 import jakarta.servlet.http.Part;
+import jakarta.servlet.http.PushBuilder;
 
 /**
  * Http servlet request wrapper
@@ -234,5 +236,29 @@ public class HttpServletRequestWrapper extends ServletRequestWrapper
     @Override
     public <T extends javax.servlet.http.HttpUpgradeHandler> T upgrade(final Class<T> handlerClass) throws IOException, javax.servlet.ServletException {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public javax.servlet.http.HttpServletMapping getHttpServletMapping() {
+        return new HttpServletMappingWrapper(this.request.getHttpServletMapping());
+    }
+
+    @Override
+    public javax.servlet.http.PushBuilder newPushBuilder() {
+        final PushBuilder builder = this.request.newPushBuilder();
+        if ( builder != null ) {
+            return new PushBuilderWrapper(builder);
+        }
+        return null;
+    }
+
+    @Override
+    public Map<String, String> getTrailerFields() {
+        return this.request.getTrailerFields();
+    }
+
+    @Override
+    public boolean isTrailerFieldsReady() {
+        return this.request.isTrailerFieldsReady();
     }
 }
