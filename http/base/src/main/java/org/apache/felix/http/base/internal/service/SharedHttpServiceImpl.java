@@ -97,17 +97,26 @@ public final class SharedHttpServiceImpl
                 throw new IllegalArgumentException("Nothing registered at " + alias);
             }
 
-            final javax.servlet.Servlet s;
+            final javax.servlet.Servlet s = getServlet(handler);
             if ( handler.getServlet() instanceof HttpResourceServlet ) {
                 final HttpResourceServlet resource = (HttpResourceServlet)handler.getServlet();
-                s = resource.getWrapper();
                 resource.setWrapper(null);
-            } else {
-                s = ((ServletWrapper)handler.getServlet()).getServlet();
             }
             this.handlerRegistry.getRegistry(handler.getContextServiceId()).unregisterServlet(handler.getServletInfo(), true);
             return s;
         }
+    }
+
+    private javax.servlet.Servlet getServlet(final ServletHandler handler) {
+        final javax.servlet.Servlet s;
+        if ( handler.getServlet() instanceof HttpResourceServlet ) {
+            final HttpResourceServlet resource = (HttpResourceServlet)handler.getServlet();
+            s = resource.getWrapper();
+            resource.setWrapper(null);
+        } else {
+            s = ((ServletWrapper)handler.getServlet()).getServlet();
+        }
+        return s;
     }
 
     /**
@@ -124,7 +133,8 @@ public final class SharedHttpServiceImpl
                 while (i.hasNext())
                 {
                     final Map.Entry<String, ServletHandler> entry = i.next();
-                    if (entry.getValue().getServlet() == servlet)
+                    final javax.servlet.Servlet s = getServlet(entry.getValue());
+                    if (s == servlet)
                     {
                         this.handlerRegistry.getRegistry(entry.getValue().getContextServiceId()).unregisterServlet(entry.getValue().getServletInfo(), false);
 
