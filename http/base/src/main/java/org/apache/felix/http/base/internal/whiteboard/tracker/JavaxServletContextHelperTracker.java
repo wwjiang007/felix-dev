@@ -39,6 +39,8 @@ public final class JavaxServletContextHelperTracker extends ServiceTracker<Servl
 {
     private final WhiteboardManager contextManager;
 
+    private final long selfBundleId;
+
     /** Map containing all info objects reported from the trackers. */
     private final Map<Long, ServletContextHelperInfo> allInfos = new ConcurrentHashMap<Long, ServletContextHelperInfo>();
 
@@ -65,6 +67,7 @@ public final class JavaxServletContextHelperTracker extends ServiceTracker<Servl
     {
         super(context, createFilter(context), null);
         this.contextManager = manager;
+        this.selfBundleId = context.getBundle().getBundleId();
     }
 
     @Override
@@ -95,10 +98,13 @@ public final class JavaxServletContextHelperTracker extends ServiceTracker<Servl
 
     private void added(@NotNull final ServiceReference<ServletContextHelper> ref)
     {
-        final ServletContextHelperInfo info = new JavaxServletContextHelperInfo(ref);
-        if ( this.contextManager.addContextHelper(info) )
-        {
-            this.allInfos.put((Long)ref.getProperty(Constants.SERVICE_ID), info);
+        // ignore all contexts registered by this bundle
+        if ( ref.getBundle().getBundleId() != this.selfBundleId ) {
+            final ServletContextHelperInfo info = new JavaxServletContextHelperInfo(ref);
+            if ( this.contextManager.addContextHelper(info) )
+            {
+                this.allInfos.put((Long)ref.getProperty(Constants.SERVICE_ID), info);
+            }
         }
     }
 

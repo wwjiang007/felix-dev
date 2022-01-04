@@ -19,7 +19,6 @@ package org.apache.felix.http.base.internal.jakartawrappers;
 import org.jetbrains.annotations.NotNull;
 
 import jakarta.servlet.ServletException;
-import jakarta.servlet.UnavailableException;
 
 /**
  * Helper class to wrap servlet exceptions
@@ -32,19 +31,10 @@ public class ServletExceptionUtil {
      * @return The exception
      */
     public static ServletException getServletException(@NotNull final javax.servlet.ServletException e) {
-        if ( e instanceof javax.servlet.UnavailableException ) {
-            final UnavailableException t = new UnavailableException(e.getMessage(), ((javax.servlet.UnavailableException)e).getUnavailableSeconds());
-            if ( e.getCause() != null ) {
-                t.initCause(e.getCause());
-            }
-            return t;
+        if ( e instanceof org.apache.felix.http.base.internal.javaxwrappers.ServletExceptionWrapper) {
+            return ((org.apache.felix.http.base.internal.javaxwrappers.ServletExceptionWrapper)e).getException();
         }
-        if ( e.getCause() instanceof ServletException ) {
-            return (ServletException)e.getCause();
-        }
-        final ServletException ne = new ServletException(e.getMessage(), e.getCause());
-        ne.setStackTrace(e.getStackTrace());
-        return ne;
+        return new ServletExceptionWrapper(e);
     }
 
 }

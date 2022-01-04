@@ -22,6 +22,7 @@ import java.util.Set;
 import org.apache.felix.http.base.internal.context.ExtServletContext;
 import org.apache.felix.http.base.internal.handler.FilterHandler;
 import org.apache.felix.http.base.internal.handler.HttpSessionWrapper;
+import org.apache.felix.http.base.internal.jakartawrappers.ServletExceptionWrapper;
 import org.apache.felix.http.base.internal.logger.SystemLogger;
 import org.apache.felix.http.base.internal.registry.HandlerRegistry;
 import org.apache.felix.http.base.internal.registry.PathResolution;
@@ -152,8 +153,11 @@ public final class Dispatcher
 		            filterChain.doFilter(wrappedRequest, wrappedResponse);
 
 		        }
-		        catch ( final Exception e)
+		        catch ( Exception e)
 		        {
+                    if ( e instanceof ServletExceptionWrapper ) {
+                        e = ((ServletExceptionWrapper)e).getException();
+                    }
 		            SystemLogger.error("Exception while processing request to " + requestURI, e);
 		            req.setAttribute(RequestDispatcher.ERROR_EXCEPTION, e);
 		            req.setAttribute(RequestDispatcher.ERROR_EXCEPTION_TYPE, e.getClass().getName());

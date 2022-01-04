@@ -126,6 +126,8 @@ public final class WhiteboardManager
 
     private volatile ServiceRegistration<ServletContextHelper> defaultContextRegistration;
 
+    private volatile ServiceRegistration<org.osgi.service.http.context.ServletContextHelper> defaultJavaxContextRegistration;
+
     /**
      * Create a new whiteboard http manager
      *
@@ -169,7 +171,7 @@ public final class WhiteboardManager
                 httpServiceFactory, webContext, this.httpBundleContext.getBundle()));
         this.contextMap.put(HttpServiceFactory.HTTP_SERVICE_CONTEXT_NAME, list);
 
-        // add default context
+        // register default context
         final Dictionary<String, Object> props = new Hashtable<>();
         props.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_NAME, HttpWhiteboardConstants.HTTP_WHITEBOARD_DEFAULT_CONTEXT_NAME);
         props.put(HttpWhiteboardConstants.HTTP_WHITEBOARD_CONTEXT_PATH, "/");
@@ -199,12 +201,38 @@ public final class WhiteboardManager
                         // nothing to do
                     }
                 }, props);
+        // register default context for javax whiteboard
+        this.defaultJavaxContextRegistration = httpBundleContext.registerService(
+                org.osgi.service.http.context.ServletContextHelper.class,
+                new ServiceFactory<org.osgi.service.http.context.ServletContextHelper>()
+                {
+
+                    @Override
+                    public org.osgi.service.http.context.ServletContextHelper getService(
+                            final Bundle bundle,
+                            final ServiceRegistration<org.osgi.service.http.context.ServletContextHelper> registration)
+                    {
+                        return new org.osgi.service.http.context.ServletContextHelper(bundle)
+                        {
+                            // nothing to override
+                        };
+                    }
+
+                    @Override
+                    public void ungetService(
+                            final Bundle bundle,
+                            final ServiceRegistration<org.osgi.service.http.context.ServletContextHelper> registration,
+                            final org.osgi.service.http.context.ServletContextHelper service)
+                    {
+                        // nothing to do
+                    }
+                }, props);
 //        addTracker(new FilterTracker(this.httpBundleContext, this));
 //        addTracker(new ListenersTracker(this.httpBundleContext, this));
 //        addTracker(new PreprocessorTracker(this.httpBundleContext, this));
+//      addTracker(new ServletTracker(this.httpBundleContext, this));
         addTracker(new ResourceTracker(this.httpBundleContext, this));
         addTracker(new ServletContextHelperTracker(this.httpBundleContext, this));
-//        addTracker(new ServletTracker(this.httpBundleContext, this));
         addTracker(new JavaxServletContextHelperTracker(httpBundleContext, this));
         addTracker(new JavaxFilterTracker(httpBundleContext, this));
         addTracker(new JavaxServletTracker(httpBundleContext, this));
@@ -244,6 +272,10 @@ public final class WhiteboardManager
         this.failureStateHandler.clear();
         this.registry.reset();
 
+        if ( this.defaultJavaxContextRegistration != null ) {
+            this.defaultJavaxContextRegistration.unregister();
+            this.defaultJavaxContextRegistration = null;
+        }
         if (this.defaultContextRegistration != null)
         {
             this.defaultContextRegistration.unregister();

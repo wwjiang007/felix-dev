@@ -586,7 +586,7 @@ public class ServletContextImpl implements ExtServletContext
 
     @Override
     public void setSessionTimeout(final int sessionTimeout) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -596,7 +596,7 @@ public class ServletContextImpl implements ExtServletContext
 
     @Override
     public void setRequestCharacterEncoding(final String encoding) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -606,7 +606,7 @@ public class ServletContextImpl implements ExtServletContext
 
     @Override
     public void setResponseCharacterEncoding(final String encoding) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override

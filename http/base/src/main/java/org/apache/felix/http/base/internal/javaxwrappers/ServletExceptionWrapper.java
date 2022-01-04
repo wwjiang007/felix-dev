@@ -21,20 +21,27 @@ import org.jetbrains.annotations.NotNull;
 import jakarta.servlet.ServletException;
 
 /**
- * Helper class to wrap servlet exceptions
+ * Wrapper for servlet exception
  */
-public class ServletExceptionUtil {
+public class ServletExceptionWrapper extends javax.servlet.ServletException {
+
+    private static final long serialVersionUID = 1L;
+
+    private final ServletException exception;
 
     /**
-     * Get javax servlet exception
-     * @param e Jakarta exception
-     * @return The exception
+     * Create new wrapepr exception
+     * @param e Original exception
      */
-    public static javax.servlet.ServletException getServletException(@NotNull final ServletException e) {
-        if ( e instanceof org.apache.felix.http.base.internal.jakartawrappers.ServletExceptionWrapper) {
-            return ((org.apache.felix.http.base.internal.jakartawrappers.ServletExceptionWrapper)e).getException();
-        }
-        return new ServletExceptionWrapper(e);
+    public ServletExceptionWrapper(@NotNull final ServletException e) {
+        this.exception = e;
     }
 
+    /**
+     * Get the original exception
+     * @return The original exception
+     */
+    @NotNull public ServletException getException() {
+        return this.exception;
+    }
 }
