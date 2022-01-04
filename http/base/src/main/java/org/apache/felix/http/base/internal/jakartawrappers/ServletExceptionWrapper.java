@@ -14,27 +14,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package org.apache.felix.http.base.internal.javaxwrappers;
+package org.apache.felix.http.base.internal.jakartawrappers;
 
 import org.jetbrains.annotations.NotNull;
 
 import jakarta.servlet.ServletException;
 
 /**
- * Helper class to wrap servlet exceptions
+ * Wrapper for servlet exception
  */
-public class ServletExceptionUtil {
+public class ServletExceptionWrapper extends ServletException {
+
+    private static final long serialVersionUID = 1L;
+
+    private final javax.servlet.ServletException exception;
 
     /**
-     * Get javax servlet exception
-     * @param e Jakarta exception
-     * @return The exception
+     * Create new wrapepr exception
+     * @param e Original exception
      */
-    public static javax.servlet.ServletException getServletException(@NotNull final ServletException e) {
-        if ( e instanceof org.apache.felix.http.base.internal.jakartawrappers.ServletExceptionWrapper) {
-            return ((org.apache.felix.http.base.internal.jakartawrappers.ServletExceptionWrapper)e).getException();
-        }
-        return new ServletExceptionWrapper(e);
+    public ServletExceptionWrapper(@NotNull final javax.servlet.ServletException e) {
+        this.exception = e;
     }
 
+    /**
+     * Get the original exception
+     * @return The original exception
+     */
+    @NotNull public javax.servlet.ServletException getException() {
+        return this.exception;
+    }
 }

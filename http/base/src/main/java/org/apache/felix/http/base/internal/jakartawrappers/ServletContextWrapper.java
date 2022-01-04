@@ -212,22 +212,22 @@ public class ServletContextWrapper implements ServletContext {
 
     @Override
     public ServletRegistration.Dynamic addServlet(final String servletName, final String className) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ServletRegistration.Dynamic addServlet(final String servletName, final Servlet servlet) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public ServletRegistration.Dynamic addServlet(final String servletName, final Class<? extends Servlet> servletClass) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T extends Servlet> T createServlet(final Class<T> clazz) throws ServletException {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -251,22 +251,22 @@ public class ServletContextWrapper implements ServletContext {
 
     @Override
     public FilterRegistration.Dynamic addFilter(final String filterName, final String className) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public FilterRegistration.Dynamic addFilter(final String filterName, final Filter filter) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public FilterRegistration.Dynamic addFilter(final String filterName, final Class<? extends Filter> filterClass) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T extends Filter> T createFilter(final Class<T> clazz) throws ServletException {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -342,22 +342,22 @@ public class ServletContextWrapper implements ServletContext {
 
     @Override
     public void addListener(String className) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T extends EventListener> void addListener(final T t) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public void addListener(final Class<? extends EventListener> listenerClass) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public <T extends EventListener> T createListener(final Class<T> clazz) throws ServletException {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -382,7 +382,7 @@ public class ServletContextWrapper implements ServletContext {
 
     @Override
     public Dynamic addJspFile(final String servletName, final String jspFile) {
-        throw new IllegalStateException();
+        throw new UnsupportedOperationException();
     }
 
     @Override
