@@ -185,7 +185,7 @@
                             org.osgi.service.http.context;version="[1.1,1.2)",
                             org.osgi.service.http.runtime;version="[1.1,1.2)",
                             org.osgi.service.http.runtime.dto;version="[1.1,1.2)",
-                            org.slf4j;resolution:=optional;version="[1.0,3.0)", 
+                            org.slf4j;version="[1.0,3.0)", 
                             *
                         </Import-Package>
                         <DynamicImport-Package>
